@@ -1,6 +1,6 @@
 class V1::IdeasController < V1::BaseController
   def create
-    @idea = Idea.new(params.permit(:content, :impact, :ease, :confidence))
+    @idea = Idea.new(permitted_params)
     if @idea.save
       render json: @idea, serializer: V1::IdeaSerializer
     else
@@ -11,7 +11,7 @@ class V1::IdeasController < V1::BaseController
   def destroy
     @idea = Idea.find_by(id: params[:id])
     if @idea.nil?
-      render json: nil, status: :unprocessable_entity 
+      render json: nil, status: :unprocessable_entity
     else
       @idea.destroy
     end
@@ -19,5 +19,20 @@ class V1::IdeasController < V1::BaseController
 
   def index
     render json: Idea.page(params[:page] || 1), each_serializer: V1::IdeaSerializer
+  end
+
+  def update
+    @idea = Idea.find_by(id: params[:id])
+    if @idea.update_attributes(permitted_params)
+      render json: @idea, serializer: V1::IdeaSerializer
+    else
+      render json: @idea.errors, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def permitted_params
+    params.permit(:content, :impact, :ease, :confidence)
   end
 end

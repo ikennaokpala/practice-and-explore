@@ -276,4 +276,34 @@ RSpec.describe 'Endpoints that are associated with managing Ideas' do
       end
     end
   end
+
+  describe 'PUT /v1/ideas/:id' do
+    let(:parameters) { { content: 'changed-content', impact: 1, ease: 2, confidence: 3 } }
+    let(:outcome) { V1::IdeaSerializer.new(idea.reload).as_json }
+
+    before { idea }
+
+    subject { put '/v1/ideas/' + idea_id.to_s, params: params, headers: headers }
+
+    context 'given a PUT request to update ideas is made' do
+      before { subject }
+
+      context 'when idea attribute(s) are valid' do
+        it 'updates the attribute(s)' do
+          expect(response).to have_http_status(:success)
+          expect(response_body).to include(outcome)
+          expect(response).to match_response_schema('v1/idea')
+        end
+      end
+
+      context 'when idea attribute(s) are invalid' do
+        let(:parameters) { { content: '', impact: 11, ease: 12, confidence: 13 } }
+
+        it 'updates the attribute(s)' do
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to match_response_schema('v1/idea_error')
+        end
+      end
+    end
+  end
 end
