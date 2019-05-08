@@ -1,0 +1,36 @@
+{
+  "id": "file:/v1/idea.json#",
+  "type": "object",
+  "required": [
+    "id",
+    "content",
+    "impact",
+    "ease",
+    "confidence",
+    "average_score",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "content": {
+      "type": "string"
+    },
+    "impact": {
+      "type": "number"
+    },
+    "ease": {
+      "type": "number"
+    },
+    "confidence": {
+      "type": "number"
+    },
+    "average_score": {
+      "type": "number"
+    },
+    "created_at": {
+      "type": "number"
+    }
+  }
+}
