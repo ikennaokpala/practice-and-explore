@@ -17,13 +17,26 @@ RSpec.describe 'Endpoints that are associated with managing Users' do
   describe 'POST /v1/users' do
     subject { post '/v1/users', params: params, headers: headers }
 
-    context 'given a POST request to create a user is made ' do
+    context 'given a POST request to create a user is made' do
       context 'when user attribute(s) are valid' do
         it 'creates a new user' do
           expect { subject }.to change { User.count }.by(1)
 
           expect(response).to have_http_status(:created)
           expect(response).to match_response_schema('v1/user')
+        end
+      end
+
+      context 'when user attribute(s) are invalid' do
+        let(:parameters) {{ email: 'example.org', name: '', password: 'pass' }}
+        let(:outcome) {{ name: ['is required'], password: ['is too short (minimum is 8 characters)', 'Passoword is invalid. You need to provide at least 8 characters, including 1 uppercase letter, 1 lowercase letter, and 1 number)'], :email=>['Email is invalid.'] }}
+
+        it 'returns requestas as unprocessable' do
+          expect { subject }.to change { User.count }.by(0)
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to match_response_schema('v1/user_error')
+          expect(response_body).to include(outcome)
         end
       end
     end

@@ -48,3 +48,14 @@ en:
             confidence:
               blank: is required
               inclusion: should be between 1 and 10
+        user:
+          attributes:
+            name:
+              blank: is required
+            password:
+              blank: is required
+              invalid: Passoword is invalid. You need to provide at least 8 characters, including 1 uppercase letter, 1 lowercase letter, and 1 number)
+            email:
+              blank: is required
+              invalid: Email is invalid.
+          
