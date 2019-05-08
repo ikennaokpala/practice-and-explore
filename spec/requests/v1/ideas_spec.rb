@@ -14,6 +14,7 @@ RSpec.describe 'Endpoints that are associated with managing Ideas' do
   let(:params) { parameters }
   let(:response_body) { JSON.parse(response.body, symbolize_names: true) }
   let(:idea) { create(:idea) }
+  let(:ideas) { create_list(:idea, 3) }
   let(:idea_id) { idea.id }
 
   describe 'POST /v1/ideas' do
@@ -206,6 +207,71 @@ RSpec.describe 'Endpoints that are associated with managing Ideas' do
           expect { subject }.to change { Idea.count }.by(0)
 
           expect(response).to have_http_status(:unprocessable_entity)
+        end
+      end
+    end
+  end
+
+  describe 'GET /v1/ideas' do
+    before do
+      Kaminari.configure do |config|
+        @default_per_page = config.default_per_page
+        config.default_per_page = 2
+      end
+    end
+
+    after do
+      Kaminari.configure do |config|
+        config.default_per_page = @default_per_page
+      end
+    end
+
+    context 'given that a GET request for ideas is made' do
+      let(:page) { 1 }
+      let(:parameters) { { page: page } }
+      let(:outcome) { ideas.map {|idea| V1::IdeaSerializer.new(idea).as_json } }
+
+      before do
+        ideas
+
+        get '/v1/ideas', params: params, headers: headers
+      end
+
+      context 'when ideas exist' do
+        context 'when on page is not defined' do
+          let(:parameters) { {} }
+
+          it 'returns per page ideas' do  
+            expect(response_body).to match_array(outcome.first(2))
+            expect(response_body.count).to eq(2)
+            expect(response).to match_response_schema('v1/ideas')
+          end
+        end
+
+        context 'when on page 1' do
+          it 'returns per page ideas' do  
+            expect(response_body).to match_array(outcome.first(2))
+            expect(response_body.count).to eq(2)
+            expect(response).to match_response_schema('v1/ideas')
+          end
+        end
+
+        context 'when on next page' do
+          let(:page) { 2 }
+
+          it 'returns per page ideas' do  
+            expect(response_body).to match_array(outcome.last(1))
+            expect(response_body.count).to eq(1)
+            expect(response).to match_response_schema('v1/ideas')
+          end
+        end
+      end
+
+      context 'when ideas do not exist' do
+        let(:ideas) { [] }
+
+        it 'returns empty' do  
+          expect(response_body).to match_array([])
         end
       end
     end

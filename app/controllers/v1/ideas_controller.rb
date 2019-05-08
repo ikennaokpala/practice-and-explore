@@ -16,4 +16,8 @@ class V1::IdeasController < V1::BaseController
       @idea.destroy
     end
   end
+
+  def index
+    render json: Idea.page(params[:page] || 1), each_serializer: V1::IdeaSerializer
+  end
 end
