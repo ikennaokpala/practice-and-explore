@@ -1,19 +1,22 @@
 require 'rails_helper'
 
 RSpec.describe 'Endpoints that are associated with managing Ideas' do
-  describe 'POST /v1/ideas' do
-    let(:headers) do 
-      { 
-        headers: { 
-          'Content-Type': 'application/json',
-          'Host': 'example.org',
-          'Cookie': ''
-        }
+  let(:headers) do 
+    { 
+      headers: { 
+        'Content-Type': 'application/json',
+        'Host': 'example.org',
+        'Cookie': ''
       }
-    end
-    let(:parameters) {{ content: 'the-content', impact: 8, ease: 8, confidence: 8 }}
-    let(:params) { parameters }
-    let(:response_body) { JSON.parse(response.body, symbolize_names: true) }
+    }
+  end
+  let(:parameters) {{ content: 'the-content', impact: 8, ease: 8, confidence: 8 }}
+  let(:params) { parameters }
+  let(:response_body) { JSON.parse(response.body, symbolize_names: true) }
+  let(:idea) { create(:idea) }
+  let(:idea_id) { idea.id }
+
+  describe 'POST /v1/ideas' do
     let(:average_score) { response_body[:average_score] }
     let(:created_at) { response_body[:created_at] }
     let(:latest_idea) { Idea.last }
@@ -177,6 +180,32 @@ RSpec.describe 'Endpoints that are associated with managing Ideas' do
             expect(confidence_errors).to match_array(['should be between 1 and 10'])
             expect(response).to match_response_schema('v1/idea_error')
           end
+        end
+      end
+    end
+  end
+
+  describe 'DELETE /v1/ideas/:id' do
+    before { idea }
+
+    subject { delete '/v1/ideas/' + idea_id.to_s, headers: headers }
+
+    context 'given an Idea id is to be removed' do
+      context 'when an existing Idea id is supplied' do
+        it 'deletes the Idea successfully' do
+          expect { subject }.to change { Idea.count }.by(-1)
+
+          expect(response).to have_http_status(:no_content)
+        end
+      end
+
+      context 'when a non-existing Idea id is supplied' do
+        let(:idea_id) { 'non-existing-id' }
+
+        it 'does not delete the Idea successfully' do
+          expect { subject }.to change { Idea.count }.by(0)
+
+          expect(response).to have_http_status(:unprocessable_entity)
         end
       end
     end

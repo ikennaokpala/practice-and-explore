@@ -7,4 +7,13 @@ class V1::IdeasController < V1::BaseController
       render json: @idea.errors, status: :unprocessable_entity
     end
   end
+
+  def destroy
+    @idea = Idea.find_by(id: params[:id])
+    if @idea.nil?
+      render json: nil, status: :unprocessable_entity 
+    else
+      @idea.destroy
+    end
+  end
 end
