@@ -30,4 +30,21 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  activerecord:
+    errors:
+      models:
+        idea:
+          attributes:
+            content:
+              blank: is required
+              too_long:
+                other: should not be more than 255 charaters long
+            impact:
+              blank: is required
+              inclusion: should be between 1 and 10
+            ease:
+              blank: is required
+              inclusion: should be between 1 and 10
+            confidence:
+              blank: is required
+              inclusion: should be between 1 and 10
