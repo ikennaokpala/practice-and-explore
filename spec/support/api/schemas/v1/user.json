@@ -1,0 +1,28 @@
+{
+  "id": "file:/v1/user.json#",
+  "type": "object",
+  "required": [
+    "jwt",
+    "refresh_token"
+  ],  
+  "properties": {
+    "jwt": {
+      "anyOf": [{
+          "type": null
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "refresh_token": {
+      "anyOf": [{
+          "type": null
+        },
+        {
+          "type": "string"
+        }
+      ]
+    }
+  }
+}
