@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Endpoints that are associated with managing Ideas' do
+RSpec.describe 'Endpoints that are associated with user session management' do
   let(:headers) do 
     { 
       headers: { 
