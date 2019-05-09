@@ -11,4 +11,10 @@ class V1::AccessTokensController < V1::BaseController
     session.login
     session.flush_by_access_payload
   end
+
+  def update
+    return head :not_found if params[:refresh_token].blank?
+    credentials = JWTSessions::Session.new(payload: payload).refresh(params[:refresh_token])
+    render json: { jwt: credentials[:access] }
+  end
 end
