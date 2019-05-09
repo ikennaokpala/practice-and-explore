@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  root 'application#index'
+
   concern :v1_api_routes_concern do
     resources :ideas, only: %i[create destroy update index], module: :v1
     resources :users, only: %i[create], module: :v1
