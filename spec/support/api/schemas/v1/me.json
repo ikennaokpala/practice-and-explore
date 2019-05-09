@@ -1,0 +1,20 @@
+{
+  "id": "file:/v1/me.json#",
+  "type": "object",
+  "required": [
+    "email",
+    "name",
+    "avatar_url"
+  ],  
+  "properties": {
+    "email": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "avatar_url": {
+      "type": "string"
+    }
+  }
+}

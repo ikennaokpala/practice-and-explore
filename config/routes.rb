@@ -3,5 +3,6 @@ Rails.application.routes.draw do
   scope module: :v1, path: :v1, as: :v1 do  
     resources :ideas, only: %i[create destroy update index]
     resources :users, only: %i[create]
+    resource :me, only: %i[show]
   end
 end
