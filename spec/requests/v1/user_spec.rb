@@ -15,6 +15,10 @@ RSpec.describe 'Endpoints that are associated with managing Users' do
   let(:response_body) { JSON.parse(response.body, symbolize_names: true) }
   
   describe 'POST /v1/users' do
+    let(:expected) { User.last.as_json.slice('id', 'email', 'name') }
+    let(:token_outcome) { JWT.decode(response_body[:jwt], nil, false).first.slice('id', 'email', 'name') }
+    let(:refresh_outcome) { JWT.decode(response_body[:refresh_token], nil, false).first.slice('id', 'email', 'name') }
+
     subject { post '/v1/users', params: params, headers: headers }
 
     context 'given a POST request to create a user is made' do
@@ -24,6 +28,8 @@ RSpec.describe 'Endpoints that are associated with managing Users' do
 
           expect(response).to have_http_status(:created)
           expect(response).to match_response_schema('v1/user')
+          expect(expected).to include(token_outcome)
+          expect(expected).to include(refresh_outcome)
         end
       end
 

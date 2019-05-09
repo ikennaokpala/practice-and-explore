@@ -7,22 +7,10 @@
   ],  
   "properties": {
     "jwt": {
-      "anyOf": [{
-          "type": null
-        },
-        {
-          "type": "string"
-        }
-      ]
+      "type": "string"
     },
     "refresh_token": {
-      "anyOf": [{
-          "type": null
-        },
-        {
-          "type": "string"
-        }
-      ]
+      "type": "string"
     }
   }
 }
