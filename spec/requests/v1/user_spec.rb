@@ -1,13 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe 'Endpoints that are associated with managing Users' do
-  let(:headers) do 
-    { 
-      headers: { 
-        'Content-Type': 'application/json',
-        'Host': 'example.org',
-        'Cookie': ''
-      }
+  let(:headers) do
+    {
+      'X-Access-Token': '',
+      Host: 'example.org',
+      Cookie: ''
     }
   end
   let(:parameters) {{ email: 'jack@example.org', name: 'Jack Ma', password: 'Password1' }}

@@ -1,13 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe 'Endpoints that are associated with managing Ideas' do
-  let(:headers) do 
-    { 
-      headers: { 
-        'Content-Type': 'application/json',
-        'Host': 'example.org',
-        'Cookie': ''
-      }
+  let(:headers) do
+    {
+      'X-Access-Token': '',
+      Host: 'example.org',
+      Cookie: ''
     }
   end
   let(:parameters) {{ content: 'the-content', impact: 8, ease: 8, confidence: 8 }}

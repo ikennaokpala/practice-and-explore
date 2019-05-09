@@ -2,7 +2,7 @@ class V1::BaseController < ApplicationController
   protected
 
   def x_access_token
-    @x_access_token ||= request.headers["HTTP_HEADERS"][:'X-Access-Token']
+    @x_access_token ||= request.headers['X-Access-Token']
   end
 
   def jwt_credentials

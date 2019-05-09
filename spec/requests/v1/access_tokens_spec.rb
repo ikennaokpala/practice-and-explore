@@ -1,13 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe 'Endpoints that are associated with user session management' do
-  let(:headers) do 
-    { 
-      headers: { 
-        'Content-Type': 'application/json',
-        'Host': 'example.org',
-        'Cookie': ''
-      }
+  let(:headers) do
+    {
+      Host: 'example.org',
+      Cookie: ''
     }
   end
   let(:parameters) {{ email: 'jack.ma@example.org', password: 'Password1' }}
@@ -45,13 +42,10 @@ RSpec.describe 'Endpoints that are associated with user session management' do
   describe 'DELETE /v1/access-tokens' do
     let(:x_access_token) { tokenized_user.jwt }
     let(:headers) do
-      { 
-        headers: { 
-          'Content-Type': 'application/json',
-          'X-Access-Token': x_access_token,
-          'Host': 'example.org',
-          'Cookie': ''
-        }
+      {
+        'X-Access-Token': x_access_token,
+        Host: 'example.org',
+        Cookie: ''
       }
     end
 
@@ -65,14 +59,11 @@ RSpec.describe 'Endpoints that are associated with user session management' do
       end
 
       context 'when X-Access-Token is not supplied' do
-        let(:headers) do 
-          { 
-            headers: { 
-              'Content-Type': 'application/json',
-              'X-Access-Token': '',
-              'Host': 'example.org',
-              'Cookie': ''
-            }
+        let(:headers) do
+          {
+            'X-Access-Token': '',
+            Host: 'example.org',
+            Cookie: ''
           }
         end
 
@@ -86,12 +77,9 @@ RSpec.describe 'Endpoints that are associated with user session management' do
   describe 'POST /v1/access-tokens/refresh' do
     let(:parameters) {{ refresh_token: tokenized_user.refresh_token }}
     let(:headers) do
-      { 
-        headers: { 
-          'Content-Type': 'application/json',
-          'Host': 'example.org',
-          'Cookie': ''
-        }
+      {
+        Host: 'example.org',
+        Cookie: ''
       }
     end
 
@@ -107,14 +95,11 @@ RSpec.describe 'Endpoints that are associated with user session management' do
 
       context 'when refresh_token is not supplied' do
         let(:parameters) {{ refresh_token: nil }}
-        let(:headers) do 
-          { 
-            headers: { 
-              'Content-Type': 'application/json',
-              'X-Access-Token': '',
-              'Host': 'example.org',
-              'Cookie': ''
-            }
+        let(:headers) do
+          {
+            'X-Access-Token': '',
+            Host: 'example.org',
+            Cookie: ''
           }
         end
 
