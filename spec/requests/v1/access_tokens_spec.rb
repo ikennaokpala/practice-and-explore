@@ -40,4 +40,72 @@ RSpec.describe 'Endpoints that are associated with user session management' do
       end
     end
   end
+
+  describe 'DELETE /v1/access-tokens' do
+    let!(:tokenized_user) { TokenizedUser.call(create(:user)) }
+    let(:x_access_token) { tokenized_user.jwt }
+    let(:headers) do
+      { 
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Access-Token': x_access_token,
+          'Host': 'example.org',
+          'Cookie': ''
+        }
+      }
+    end
+
+    before { delete '/v1/access-tokens',  params: params, headers: headers }
+
+    context 'given a login request has been made' do
+      context 'when X-Access-Token is supplied' do
+        it 'signs user out by flushing via access payload' do
+          expect(response).to have_http_status(:no_content)
+        end
+      end
+
+      context 'when X-Access-Token is not supplied' do
+        let(:headers) do 
+          { 
+            headers: { 
+              'Content-Type': 'application/json',
+              'X-Access-Token': '',
+              'Host': 'example.org',
+              'Cookie': ''
+            }
+          }
+        end
+
+        it 'returns not found' do
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+    end
+  end
+
+    context 'given a login request has been made' do
+      context 'when X-Access-Token is supplied' do
+        it 'returns user details' do
+          expect(response).to have_http_status(:no_content)
+        end
+      end
+
+      context 'when X-Access-Token is not supplied' do
+        let(:headers) do 
+          { 
+            headers: { 
+              'Content-Type': 'application/json',
+              'X-Access-Token': '',
+              'Host': 'example.org',
+              'Cookie': ''
+            }
+          }
+        end
+
+        it 'returns not found' do
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+    end
+  end
 end

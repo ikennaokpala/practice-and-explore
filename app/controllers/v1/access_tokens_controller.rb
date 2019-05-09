@@ -4,4 +4,11 @@ class V1::AccessTokensController < V1::BaseController
     render json: TokenizedUser.call(@user), 
          serializer: V1::TokenizedUserSerializer, status: :created unless @user.blank?
   end
+  
+  def destroy
+    return head :not_found if payload.blank?
+    session = JWTSessions::Session.new(refresh_by_access_allowed: true, payload: payload)
+    session.login
+    session.flush_by_access_payload
+  end
 end

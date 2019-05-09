@@ -1,7 +1,6 @@
 class V1::MesController < V1::BaseController
   def show
-    token = request.headers["HTTP_HEADERS"][:'X-Access-Token']
-    @user = token.blank? ? User.new : User.find_by(id: JWT.decode(token, nil, false).first['id'])
+    @user = x_access_token.blank? ? User.new : User.find_by(id: payload['id'])
     if @user.persisted?
       render json: @user, serializer: V1::MeSerializer
     else
