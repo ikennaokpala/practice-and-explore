@@ -3,6 +3,14 @@ class V1::BaseController < ApplicationController
 
   before_action :set_auth_header!
 
+  rescue_from JWTSessions::Errors::Unauthorized, with: :not_authorized
+
+  private
+
+  def not_authorized
+    render json: { error: 'Not authorized' }, status: :unauthorized
+  end
+
   protected
 
   def set_auth_header!

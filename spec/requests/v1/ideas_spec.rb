@@ -306,4 +306,18 @@ RSpec.describe 'Endpoints that are associated with managing Ideas' do
       end
     end
   end
+
+  describe 'Unauthorized access' do
+  let(:headers) do
+    {
+      Host: 'example.org',
+      Cookie: ''
+    }
+  end
+    before { get '/ideas'}
+
+    it 'should return unauthorized' do
+      expect(response).to have_http_status(:unauthorized)
+    end
+  end
 end
