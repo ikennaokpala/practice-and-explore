@@ -1,9 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe 'Endpoints that are associated with managing Ideas' do
+  let!(:tokenized_user) { TokenizedUser.call(create(:user)) }
+
   let(:headers) do
     {
-      'X-Access-Token': '',
+      'X-Access-Token': tokenized_user.jwt,
       Host: 'example.org',
       Cookie: ''
     }

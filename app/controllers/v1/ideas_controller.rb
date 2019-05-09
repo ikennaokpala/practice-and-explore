@@ -1,4 +1,6 @@
 class V1::IdeasController < V1::BaseController
+  before_action :authorize_access_request!
+
   def create
     @idea = Idea.new(permitted_params)
     if @idea.save
