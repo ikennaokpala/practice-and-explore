@@ -4,6 +4,7 @@ class V1::BaseController < ApplicationController
   before_action :set_auth_header!
 
   rescue_from JWTSessions::Errors::Unauthorized, with: :not_authorized
+  rescue_from JWT::DecodeError, with: :not_authorized
 
   private
 
@@ -22,7 +23,7 @@ class V1::BaseController < ApplicationController
   end
 
   def jwt_credentials
-    x_access_token.blank? ? [{}] : JWT.decode(x_access_token, nil, false)
+    @jwt_credentails ||= params[:refresh_token].blank? ? JWT.decode(x_access_token, nil, false) : [{}]
   end
 
   def payload

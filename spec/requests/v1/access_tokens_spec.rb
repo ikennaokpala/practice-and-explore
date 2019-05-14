@@ -68,7 +68,7 @@ RSpec.describe 'Endpoints that are associated with user session management' do
         end
 
         it 'returns not found' do
-          expect(response).to have_http_status(:not_found)
+          expect(response).to have_http_status(:unauthorized)
         end
       end
     end
@@ -87,7 +87,7 @@ RSpec.describe 'Endpoints that are associated with user session management' do
 
     context 'given a token refresh request has been made' do
       context 'when refresh_token is supplied' do
-        it 'returns refreshes the user access token' do
+        it 'refreshes the user access token' do
           expect(response).to have_http_status(:success)
           expect(JWT.decode(response_body[:jwt], nil, false).first.values).not_to be_empty
         end

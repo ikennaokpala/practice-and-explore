@@ -26,6 +26,20 @@ RSpec.describe 'Endpoints for retrieving details about the current user' do
         end
       end
 
+      context 'when X-Access-Token is not valid' do
+        let(:headers) do
+          {
+            'X-Access-Token': 'invalid-X-Access-Token',
+            Host: 'example.org',
+            Cookie: ''
+          }
+        end
+
+        it 'returns not found' do
+          expect(response).to have_http_status(:unauthorized)
+        end
+      end
+
       context 'when X-Access-Token is not supplied' do
         let(:headers) do
           {
