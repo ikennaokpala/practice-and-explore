@@ -1,8 +1,9 @@
 class V1::AccessTokensController < V1::BaseController
   def create
-    @user = User.find_by(params.permit(:email, :password))      
+    @user = User.find_by(params.permit(:email, :password))
+    return head :unauthorized if @user.blank?
     render json: TokenizedUser.call(@user), 
-         serializer: V1::TokenizedUserSerializer, status: :created unless @user.blank?
+         serializer: V1::TokenizedUserSerializer, status: :created
   end
   
   def destroy

@@ -33,7 +33,7 @@ RSpec.describe 'Endpoints that are associated with user session management' do
         let(:parameters) {{ email: 'wrong.email@example.org', password: 'WrongPass1' }}
 
         it 'rejects authentication attempt' do
-          expect(response).to have_http_status(:no_content)
+          expect(response).to have_http_status(:unauthorized)
         end
       end
     end
