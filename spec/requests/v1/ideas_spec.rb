@@ -14,7 +14,13 @@ RSpec.describe 'Endpoints that are associated with managing Ideas' do
   let(:params) { parameters }
   let(:response_body) { JSON.parse(response.body, symbolize_names: true) }
   let(:idea) { create(:idea) }
-  let(:ideas) { create_list(:idea, 3) }
+  let(:ideas) do
+    [
+      create(:idea, id: 1, content: 'the-content', impact: 6, ease: 6, confidence: 6),
+      create(:idea, id: 2, content: 'the-content', impact: 7, ease: 7, confidence: 7),
+      create(:idea, id: 3, content: 'the-content', impact: 8, ease: 8, confidence: 8)
+    ].reverse
+  end
   let(:idea_id) { idea.id }
 
   describe 'POST /v1/ideas' do
@@ -233,11 +239,20 @@ RSpec.describe 'Endpoints that are associated with managing Ideas' do
 
       before do
         ideas
-
         get '/v1/ideas', params: params, headers: headers
       end
 
       context 'when ideas exist' do
+        let(:outcome_ids) { outcome.map { |out| out[:id] }.first(2) }
+
+        it 'returns ideas ordered by average score' do
+          expect(response_body).to match_array(outcome.first(2))
+          expect(outcome_ids.first).to eq(3)
+          expect(outcome_ids.last).to eq(2)
+          expect(response_body.count).to eq(2)
+          expect(response).to match_response_schema('v1/ideas')
+        end
+
         context 'when on page is not defined' do
           let(:parameters) { {} }
 

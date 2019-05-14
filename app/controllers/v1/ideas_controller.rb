@@ -20,7 +20,7 @@ class V1::IdeasController < V1::BaseController
   end
 
   def index
-    render json: Idea.page(params[:page] || 1), each_serializer: V1::IdeaSerializer
+    render json: Idea.by_average_score(params[:page] || 1), each_serializer: V1::IdeaSerializer
   end
 
   def update
