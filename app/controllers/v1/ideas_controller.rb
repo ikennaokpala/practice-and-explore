@@ -34,7 +34,12 @@ class V1::IdeasController < V1::BaseController
 
   private
 
+  def user
+    @user ||= User.find_by(id: payload['id'])
+  end
+
   def permitted_params
     params.permit(:content, :impact, :ease, :confidence)
+          .merge(user_id: user.id)
   end
 end

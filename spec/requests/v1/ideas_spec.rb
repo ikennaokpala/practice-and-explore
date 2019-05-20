@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Endpoints that are associated with managing Ideas' do
-  let!(:tokenized_user) { TokenizedUser.call(create(:user)) }
+  let!(:user) { create(:user) }
+  let(:tokenized_user) { TokenizedUser.call(user) }
 
   let(:headers) do
     {
@@ -10,7 +11,7 @@ RSpec.describe 'Endpoints that are associated with managing Ideas' do
       Cookie: ''
     }
   end
-  let(:parameters) {{ content: 'the-content', impact: 8, ease: 8, confidence: 8 }}
+  let(:parameters) {{ content: 'the-content', impact: 8, ease: 8, confidence: 8, user_id: user.id }}
   let(:params) { parameters }
   let(:response_body) { JSON.parse(response.body, symbolize_names: true) }
   let(:idea) { create(:idea) }
@@ -31,13 +32,17 @@ RSpec.describe 'Endpoints that are associated with managing Ideas' do
     subject { post '/v1/ideas',  params: params, headers: headers }
 
     context 'when Idea attributes are valid' do
-      it 'creates an Idea successfully' do
-        expect { subject }.to change { Idea.count }.by(1)
+      context 'given a user' do
+        it 'creates an Idea successfully' do
+          expect { subject }.to change { Idea.count }.by(1)
 
-        expect(response).to have_http_status(:success)
-        expect(average_score).to eq(8)
-        expect(created_at).to eq(latest_idea.created_at.to_i)
-        expect(response).to match_response_schema('v1/idea')
+          expect(response).to have_http_status(:success)
+          expect(average_score).to eq(8)
+          expect(response_body[:user_id]).to eq(tokenized_user.user.id)
+          expect(tokenized_user.user.id).to eq(latest_idea.user.id)
+          expect(created_at).to eq(latest_idea.created_at.to_i)
+          expect(response).to match_response_schema('v1/idea')
+        end
       end
     end
 

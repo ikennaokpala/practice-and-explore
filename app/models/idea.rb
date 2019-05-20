@@ -4,6 +4,8 @@ class Idea < ApplicationRecord
   validates :content, presence: true, length: { maximum: 255 }
   validates :impact, :ease, :confidence, presence: true, inclusion: { in: 1..10 }
 
+  belongs_to :user
+
   scope :by_average_score, -> (offset) do
     select(AVERAGE_SCORE_SELECT)
       .page(offset)
@@ -13,4 +15,6 @@ class Idea < ApplicationRecord
   def average_score
     (impact + ease + confidence) / 3
   end
+
+  private_constant :AVERAGE_SCORE_SELECT
 end
